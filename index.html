@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emissão de OS - INFO PROJEKT</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Emissão de Ordem de Serviço</h1>
+
+        <div class="row">
+            <div class="col">
+                <label>Tipo de Pessoa</label>
+                <select id="tipo-pessoa">
+                    <option value="PF">Pessoa Física</option>
+                    <option value="PJ">Pessoa Jurídica</option>
+                </select>
+            </div>
+            <div class="col">
+                <label>Tipo de Atendimento</label>
+                <select id="tipo-atendimento" onchange="togglePlanos()">
+                    <option value="CLIENTE NOVO">Cliente Novo</option>
+                    <option value="REATIVAÇÃO DE ACESSO">Reativação de Acesso</option>
+                    <option value="AMPLIAÇÃO DE BANDA">Ampliação de Banda</option>
+                </select>
+            </div>
+        </div>
+
+        <h3>Dados do Cliente</h3>
+        <div class="form-group">
+            <label for="paste-area">Cole aqui: "Cliente ID: ... Nome: ... CPF: ..."</label>
+            <textarea id="paste-area" rows="4" placeholder="Cole o texto do sistema aqui..."></textarea>
+        </div>
+
+        <h3>Detalhes do Plano</h3>
+        
+        <div id="campo-plano-antigo" class="hidden form-group" style="background-color: rgba(255, 235, 238, 0.5); padding: 10px; border-radius: 8px; border: 1px dashed var(--secondary-color);">
+            <div class="row">
+                <div class="col">
+                    <label style="color: var(--secondary-color);">Plano Antigo</label>
+                    <input type="text" id="plano-antigo" placeholder="Ex: 100 MB">
+                </div>
+                <div class="col">
+                    <label style="color: var(--secondary-color);">Valor Antigo</label>
+                    <input type="text" id="valor-antigo" placeholder="Ex: R$69,90">
+                </div>
+            </div>
+            <small style="color: #444; display: block; margin-top: 5px; font-weight: bold;">*Preencha apenas se for Ampliação de Banda</small>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <label>Plano Contratado (Novo)</label>
+                <input type="text" id="plano-novo" placeholder="Ex: 300 MB">
+            </div>
+            <div class="col">
+                <label>Valor Mensal</label>
+                <input type="text" id="valor-plano" placeholder="Ex: R$89,90">
+            </div>
+        </div>
+
+        <h3>Equipamentos</h3>
+        <div class="form-group" style="background: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.3); padding: 15px; border-radius: 8px;">
+            <div class="row">
+                <div class="col">
+                    <label>Roteador em Comodato?</label>
+                    <select id="roteador-comodato">
+                        <option value="SIM">Sim</option>
+                        <option value="NÃO">Não</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Kit FTTH (ONU) em Comodato?</label>
+                    <select id="modem-comodato">
+                        <option value="SIM">Sim</option>
+                        <option value="NÃO">Não</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <h3>Documentação</h3>
+        <div class="row">
+            <div class="col">
+                <label>Assinatura dos Termos</label>
+                <select id="tipo-assinatura">
+                    <option value="DIGITALMENTE">Digitalmente</option>
+                    <option value="MANUALMENTE">Manualmente</option>
+                </select>
+            </div>
+            <div class="col">
+                <label>Docs Anexados?</label>
+                <select id="docs-anexados">
+                    <option value="SIM">Sim</option>
+                    <option value="NÃO">Não</option>
+                </select>
+            </div>
+        </div>
+
+        <h3>Observações (Opcional)</h3>
+        <div class="form-group">
+            <textarea id="observacoes" rows="3" placeholder="Digite aqui pontos de referência ou observações técnicas..."></textarea>
+        </div>
+
+        <div class="checklist-final">
+            <h4>Checklist Obrigatório</h4>
+            <div class="checklist-item">
+                <input type="checkbox" id="check1" checked> <label for="check1">CONTRATO VERIFICADO E ASSINADO CORRETAMENTE</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check2" checked> <label for="check2">BOLETOS 2026 GERADOS E IMPRESSOS</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check3" checked> <label for="check3">INFORMAÇÕES ADICIONADAS NO CAMPO ANOTAÇÕES DO SGP</label>
+            </div>
+        </div>
+
+        <button class="btn-print" onclick="prepararImpressao()">IMPRIMIR ORDEM DE SERVIÇO</button>
+    </div>
+
+    <div id="printable-content">
+        <div class="print-header">
+            TIPO: <span id="p-tipo-servico">CLIENTE NOVO</span>
+        </div>
+        
+        <div class="print-body">
+            <div class="print-line">
+                <span class="label">NOME:</span> <span id="p-nome" class="value"></span>
+            </div>
+            <div class="print-line">
+                <span class="label" id="p-label-doc">CPF:</span> <span id="p-doc" class="value"></span>
+            </div>
+            
+            <div id="p-linha-plano-antigo" class="print-line hidden">
+                <span class="label">PLANO ANTIGO:</span> <span id="p-plano-antigo" class="value"></span>
+            </div>
+
+            <div class="print-line">
+                <span class="label">PLANO:</span> <span id="p-plano-completo" class="value"></span>
+            </div>
+            
+            <div class="print-line">
+                <span class="label">ROTEADOR EM COMODATO:</span> <span id="p-rot-comodato" class="value">SIM</span>
+            </div>
+            <div class="print-line">
+                <span class="label">KIT FTTH EM COMODATO:</span> <span id="p-mod-comodato" class="value">SIM</span>
+            </div>
+            
+            <div class="print-line">
+                <span class="label">ASSINATURA TERMOS:</span> <span id="p-assinatura" class="value">DIGITALMENTE</span>
+            </div>
+            
+            <div class="print-line-last" id="linha-docs">
+                <span class="label">DOCUMENTOS ANEXADOS:</span> <span id="p-docs-anex" class="value">SIM</span>
+            </div>
+            
+            <div id="p-linha-obs" class="print-line-last hidden">
+                <span class="label">OBSERVAÇÕES:</span> <span id="p-obs" class="value" style="font-weight: bold;"></span>
+            </div>
+        </div>
+
+        <div class="print-footer">
+            <div>[<span id="p-c1">X</span>] CONTRATO VERIFICADO E ASSINADO CORRETAMENTE</div>
+            <div>[<span id="p-c2">X</span>] BOLETOS 2026 GERADOS E IMPRESSOS</div>
+            <div>[<span id="p-c3">X</span>] INFORMAÇÕES ADICIONADAS NO CAMPO ANOTAÇÕES DO SGP</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

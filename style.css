@@ -1,0 +1,224 @@
+:root {
+    --primary-color: #b71c1c; 
+    --secondary-color: #ff1744; /* Vermelho Neon */
+    --dark-bg: #0a0a0a;
+    --glass-bg: rgba(255, 255, 255, 0.92); /* Fundo branco meio transparente */
+    --text-color: #333;
+}
+
+* { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+/* --- FUNDO ANIMADO (DOIDERA) --- */
+body {
+    margin: 0;
+    padding: 20px;
+    color: var(--text-color);
+    /* Gradiente animado: Vermelho Escuro, Preto, Vermelho Vivo, Roxo Escuro */
+    background: linear-gradient(-45deg, #1a0000, #b71c1c, #000000, #4a0000);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    min-height: 100vh;
+}
+
+/* Animação do Fundo */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --- ESTILOS DO FORMULÁRIO (TELA) --- */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    /* Efeito de Vidro (Glassmorphism) */
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 15px;
+    /* Sombra neon suave */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-top: 5px solid var(--secondary-color);
+    transition: transform 0.3s ease;
+}
+
+.container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px 0 rgba(183, 28, 28, 0.4);
+}
+
+h1 { 
+    color: var(--primary-color); 
+    text-align: center; 
+    margin-bottom: 30px; 
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+h3 { 
+    border-bottom: 2px solid var(--secondary-color); 
+    padding-bottom: 5px; 
+    margin-top: 25px; 
+    color: #444; 
+    font-weight: 700;
+}
+
+.form-group { margin-bottom: 15px; }
+label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9em; color: #555; }
+
+/* Inputs Modernos */
+input[type="text"], select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px; 
+    font-size: 1em;
+    background-color: rgba(255,255,255,0.8);
+    transition: all 0.3s ease;
+}
+
+/* Efeito Neon ao clicar */
+input[type="text"]:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(255, 23, 68, 0.4); 
+    transform: scale(1.01);
+}
+
+#paste-area {
+    background-color: #fff8f8;
+    border: 2px dashed var(--secondary-color);
+    min-height: 80px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #b71c1c;
+}
+
+.row { display: flex; gap: 15px; }
+.col { flex: 1; }
+
+.checklist-final { 
+    background-color: rgba(255, 235, 238, 0.7); 
+    padding: 15px; 
+    border-radius: 8px; 
+    margin-top: 20px; 
+    border-left: 5px solid var(--secondary-color);
+}
+
+.checklist-item { margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-size: 0.9em; cursor: pointer; }
+.checklist-item:hover { color: var(--secondary-color); }
+
+/* --- BOTÃO PULSANTE --- */
+button.btn-print {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(45deg, #b71c1c, #ff1744);
+    color: white;
+    border: none;
+    border-radius: 50px; 
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(183, 28, 28, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+button.btn-print:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 23, 68, 0.6);
+}
+
+button.btn-print::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: 0.5s;
+}
+
+button.btn-print:hover::after { left: 100%; }
+
+.hidden { display: none; }
+
+/* --- ESTILOS DE IMPRESSÃO (PAPEL - LIMPO E BRANCO) --- */
+#printable-content { display: none; }
+
+@media print {
+    body { 
+        background: white !important; 
+        padding: 0; 
+        margin: 0; 
+        animation: none !important;
+        /* Correção para navegadores modernos e antigos */
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .container { display: none; } /* Esconde o formulário futurista */
+    
+    #printable-content {
+        display: block;
+        padding: 2cm 1.5cm;
+        font-family: 'Courier New', Courier, monospace; 
+        color: #000;
+        font-size: 12pt;
+    }
+
+    .print-header {
+        text-align: center;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #000;
+    }
+
+    .print-body { margin-bottom: 25px; }
+
+    .print-line, .print-line-last {
+        padding: 8px 0;
+        border-bottom: 1px dotted #999; 
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    .print-line-last {
+        border-bottom: none;
+        padding-bottom: 20px;
+    }
+
+    .label {
+        font-weight: bold;
+        margin-right: 10px;
+        white-space: nowrap; 
+    }
+
+    .value {
+        font-weight: normal;
+        text-transform: uppercase;
+        flex: 1; 
+    }
+
+    .print-footer {
+        border-top: 1px dotted #999;
+        padding-top: 20px;
+        font-size: 0.9em;
+    }
+    
+    .print-footer div { margin-bottom: 8px; }
+    
+    .hidden { display: none !important; }
+}
